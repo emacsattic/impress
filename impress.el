@@ -1,4 +1,4 @@
-;;; impress.el --- group, process, and publish files
+ ;;; impress.el --- group, process, and publish files
 
 ;; Copyright (C) 2008  David O'Toole
 
@@ -117,6 +117,9 @@
   (find-file filename)
   (org-export-as-html nil :hidden options nil nil destination-dir))
 
+(defun impress-publish-verbatim (filename destination-dir &optional options)
+  (copy-file filename destination-dir :ok-if-already-exists))
+
 (defun impress-publish-group-to-path (group path)
   (let ((files (impress-group-files group))
 	(destination (impress-path-destination-directory path))
@@ -132,9 +135,13 @@
 
 ;; A project consists of a set of groups and a set of paths used to
 ;; publish files from the groups. Both sets are hash tables with
-;; string keys.
+;; string keys. The MAPPINGS field is a list of 
+;;
+;;    (group-name . path-name) 
+;;
+;; pairs used to decide which groups get published to which paths.
 
-(defstruct impress-project name groups paths)
+(defstruct impress-project name groups paths mappings)
 
 
 (provide 'impress)
